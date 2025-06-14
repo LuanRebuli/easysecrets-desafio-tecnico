@@ -71,15 +71,15 @@ const SalesChart = () => {
     if (active && payload && payload.length) {
       return (
         <div
-          className={`p-4 rounded-xl shadow-2xl border-0 backdrop-blur-md ring-1 ${
+          className={`p-3 sm:p-4 rounded-lg sm:rounded-xl shadow-2xl border-0 backdrop-blur-md ring-1 max-w-[280px] sm:max-w-none ${
             isDarkMode
-              ? 'bg-gray-800/90 ring-gray-600/50 text-white'
-              : 'bg-white/90 ring-gray-200/50 text-gray-800'
+              ? 'bg-gray-800/95 ring-gray-600/50 text-white'
+              : 'bg-white/95 ring-gray-200/50 text-gray-800'
           }`}
         >
-          <div className="mb-3">
+          <div className="mb-2 sm:mb-3">
             <h3
-              className={`font-bold text-base ${
+              className={`font-bold text-sm sm:text-base ${
                 isDarkMode ? 'text-white' : 'text-gray-800'
               }`}
             >
@@ -94,29 +94,29 @@ const SalesChart = () => {
             ></div>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2 sm:space-y-3">
             {payload.map((entry: any, index: number) => (
               <div
                 key={index}
-                className="flex items-center justify-between gap-4 min-w-[200px]"
+                className="flex items-center justify-between gap-2 sm:gap-4 min-w-[160px] sm:min-w-[200px]"
               >
-                <div className="flex items-center gap-3">
-                  <span className="text-lg">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <span className="text-base sm:text-lg">
                     {productEmojis[entry.dataKey as keyof typeof productEmojis]}
                   </span>
                   <div
-                    className="w-3 h-3 rounded-full ring-2 ring-white shadow-sm"
+                    className="w-2 h-2 sm:w-3 sm:h-3 rounded-full ring-1 sm:ring-2 ring-white shadow-sm"
                     style={{ backgroundColor: entry.color }}
                   />
                   <span
-                    className="font-medium text-sm"
+                    className="font-medium text-xs sm:text-sm truncate"
                     style={{ color: entry.color }}
                   >
                     {entry.dataKey}
                   </span>
                 </div>
                 <span
-                  className={`font-bold text-sm ${
+                  className={`font-bold text-xs sm:text-sm ${
                     isDarkMode ? 'text-white' : 'text-gray-900'
                   }`}
                 >
@@ -127,19 +127,19 @@ const SalesChart = () => {
           </div>
 
           <div
-            className={`mt-4 pt-3 border-t ${
+            className={`mt-3 sm:mt-4 pt-2 sm:pt-3 border-t ${
               isDarkMode ? 'border-gray-600' : 'border-gray-100'
             }`}
           >
             <div className="flex items-center justify-between">
               <span
-                className={`font-semibold text-sm flex items-center gap-1 ${
+                className={`font-semibold text-xs sm:text-sm flex items-center gap-1 ${
                   isDarkMode ? 'text-gray-300' : 'text-gray-600'
                 }`}
               >
                 📊 Total
               </span>
-              <span className="font-bold text-indigo-500 text-sm">
+              <span className="font-bold text-indigo-500 text-xs sm:text-sm">
                 {payload.reduce(
                   (sum: number, item: any) => sum + item.value,
                   0
@@ -210,16 +210,16 @@ const SalesChart = () => {
             : 'bg-white/70 border-gray-200'
         }`}
       >
-        <div className="mb-6 text-center">
+        <div className="mb-4 sm:mb-6 text-center">
           <h1
-            className={`text-3xl font-bold flex items-center justify-center gap-2 ${
+            className={`text-2xl sm:text-3xl font-bold flex items-center justify-center gap-2 ${
               isDarkMode ? 'text-white' : 'text-gray-900'
             }`}
           >
             📊 Dashboard de Vendas
           </h1>
           <p
-            className={`text-sm mt-2 ${
+            className={`text-xs sm:text-sm mt-2 ${
               isDarkMode ? 'text-gray-300' : 'text-gray-600'
             }`}
           >
@@ -227,12 +227,17 @@ const SalesChart = () => {
           </p>
         </div>
 
-        <div className="h-[500px]">
+        <div className="h-[300px] sm:h-[400px] lg:h-[500px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={data}
-              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-              barCategoryGap="20%"
+              margin={{
+                top: 10,
+                right: 10,
+                left: 10,
+                bottom: 40,
+              }}
+              barCategoryGap="15%"
             >
               <CartesianGrid
                 strokeDasharray="3 3"
@@ -246,6 +251,10 @@ const SalesChart = () => {
                 fontWeight={500}
                 tickLine={false}
                 axisLine={false}
+                interval={0}
+                angle={0}
+                textAnchor="middle"
+                height={30}
               />
               <YAxis
                 stroke={isDarkMode ? '#d1d5db' : '#374151'}
@@ -253,8 +262,15 @@ const SalesChart = () => {
                 fontWeight={500}
                 tickLine={false}
                 axisLine={false}
+                width={40}
               />
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip
+                content={<CustomTooltip />}
+                cursor={{ fill: 'rgba(0, 0, 0, 0.1)' }}
+                offset={10}
+                position={{ y: 0 }}
+                allowEscapeViewBox={{ x: false, y: true }}
+              />
               <Legend
                 wrapperStyle={{
                   paddingTop: '20px',
