@@ -10,16 +10,34 @@ import {
   CartesianGrid,
   Legend,
   ResponsiveContainer,
+  TooltipProps,
 } from 'recharts';
 import { useSpring, animated } from '@react-spring/web';
 import { Moon, Sun } from 'lucide-react';
 import salesData from '@/data/salesData.json';
+import {
+  ValueType,
+  NameType,
+} from 'recharts/types/component/DefaultTooltipContent';
 
 interface ChartData {
   mes: string;
   Refrigerante: number;
   Suco: number;
   Salgadinho: number;
+}
+
+interface TooltipPayload {
+  color: string;
+  dataKey: string;
+  value: number;
+  payload: ChartData;
+}
+
+interface CustomTooltipProps extends TooltipProps<ValueType, NameType> {
+  active?: boolean;
+  payload?: TooltipPayload[];
+  label?: string;
 }
 
 const transformData = (data: typeof salesData): ChartData[] => {
@@ -67,7 +85,11 @@ const SalesChart = () => {
     Salgadinho: '🍿',
   };
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip: React.FC<CustomTooltipProps> = ({
+    active,
+    payload,
+    label,
+  }) => {
     if (active && payload && payload.length) {
       return (
         <div
@@ -95,7 +117,7 @@ const SalesChart = () => {
           </div>
 
           <div className="space-y-2 sm:space-y-3">
-            {payload.map((entry: any, index: number) => (
+            {payload.map((entry, index) => (
               <div
                 key={index}
                 className="flex items-center justify-between gap-2 sm:gap-4 min-w-[160px] sm:min-w-[200px]"
@@ -140,10 +162,7 @@ const SalesChart = () => {
                 📊 Total
               </span>
               <span className="font-bold text-indigo-500 text-xs sm:text-sm">
-                {payload.reduce(
-                  (sum: number, item: any) => sum + item.value,
-                  0
-                )}
+                {payload.reduce((sum, item) => sum + item.value, 0)}
               </span>
             </div>
           </div>
@@ -155,16 +174,16 @@ const SalesChart = () => {
 
   return (
     <div
-      className={`min-h-screen flex items-center justify-center p-8 transition-all duration-500 ${
+      className={`min-h-screen flex items-center justify-center p-4 sm:p-8 transition-all duration-500 ${
         isDarkMode
           ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900'
           : 'bg-gradient-to-br from-gray-50 via-white to-gray-100'
       }`}
     >
-      <div className="absolute top-6 right-4 z-10">
+      <div className="absolute top-4 right-4 sm:top-8 sm:right-8 z-10">
         <button
           onClick={() => setIsDarkMode(!isDarkMode)}
-          className={`relative flex items-center justify-center w-16 h-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg ${
+          className={`relative flex items-center justify-center w-14 h-7 sm:w-16 sm:h-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg ${
             isDarkMode
               ? 'bg-gradient-to-r from-indigo-600 to-purple-600'
               : 'bg-gradient-to-r from-yellow-400 to-orange-500'
@@ -172,10 +191,10 @@ const SalesChart = () => {
         >
           <animated.div
             style={toggleAnimation}
-            className={`absolute w-6 h-6 rounded-full shadow-md transition-all duration-300 flex items-center justify-center ${
+            className={`absolute w-5 h-5 sm:w-6 sm:h-6 rounded-full shadow-md transition-all duration-300 flex items-center justify-center ${
               isDarkMode
-                ? 'bg-gray-800 translate-x-4'
-                : 'bg-white -translate-x-4'
+                ? 'bg-gray-800 translate-x-3 sm:translate-x-4'
+                : 'bg-white -translate-x-3 sm:-translate-x-4'
             }`}
           >
             {isDarkMode ? (
@@ -185,16 +204,16 @@ const SalesChart = () => {
             )}
           </animated.div>
 
-          <div className="absolute left-2">
+          <div className="absolute left-1 sm:left-2">
             <Sun
-              className={`w-4 h-4 transition-opacity duration-300 ${
+              className={`w-3 h-3 sm:w-4 sm:h-4 transition-opacity duration-300 ${
                 isDarkMode ? 'opacity-30 text-gray-300' : 'opacity-0'
               }`}
             />
           </div>
-          <div className="absolute right-2">
+          <div className="absolute right-1 sm:right-2">
             <Moon
-              className={`w-4 h-4 transition-opacity duration-300 ${
+              className={`w-3 h-3 sm:w-4 sm:h-4 transition-opacity duration-300 ${
                 isDarkMode ? 'opacity-0' : 'opacity-30 text-gray-600'
               }`}
             />
@@ -204,7 +223,7 @@ const SalesChart = () => {
 
       <animated.div
         style={cardAnimation}
-        className={`w-full max-w-4xl p-8 rounded-2xl shadow-2xl backdrop-blur-sm border transition-all duration-300 ${
+        className={`w-full max-w-4xl p-4 sm:p-8 rounded-xl sm:rounded-2xl shadow-2xl backdrop-blur-sm border transition-all duration-300 ${
           isDarkMode
             ? 'bg-gray-800/70 border-gray-600/50'
             : 'bg-white/70 border-gray-200'
@@ -232,9 +251,9 @@ const SalesChart = () => {
             <BarChart
               data={data}
               margin={{
-                top: 10,
-                right: 10,
-                left: 10,
+                top: 20,
+                right: 20,
+                left: 20,
                 bottom: 40,
               }}
               barCategoryGap="15%"
